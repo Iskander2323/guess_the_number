@@ -1,23 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class ResultPage extends StatefulWidget {
+  const ResultPage({super.key, required this.isVictory});
+
+  final bool isVictory;
+
+  @override
+  State<ResultPage> createState() => _ResultPageState();
+}
+
+class _ResultPageState extends State<ResultPage> {
+  List<Color> _resultColors(bool result) {
+    if (result) {
+      return [Color.fromRGBO(59, 217, 6, 1), Color.fromRGBO(0, 106, 255, 1)];
+    } else {
+      return [Color.fromRGBO(217, 6, 6, 1), Color.fromRGBO(230, 0, 255, 1)];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: LayoutBuilder(builder: (context, contrains) {
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: EdgeInsets.symmetric(horizontal: 20),
           height: contrains.maxHeight,
           width: contrains.maxWidth,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                Color.fromRGBO(59, 217, 6, 1),
-                Color.fromRGBO(255, 195, 0, 1)
-              ],
+              colors: _resultColors(widget.isVictory),
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -26,23 +38,20 @@ class HomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Угадай число',
+                widget.isVictory ? 'Вы выиграли!' : 'Вы проиграли!',
                 style: Theme.of(context)
                     .textTheme
                     .titleLarge!
                     .copyWith(fontSize: 40),
               ),
-              Text(
-                  'Для победы надо угадать загаданное число за ограниченное количество попыток',
-                  style: Theme.of(context).textTheme.bodyLarge),
               GestureDetector(
                 onTap: () => context.goNamed('parametersPage'),
                 child: Container(
                   alignment: Alignment.center,
-                  decoration: const BoxDecoration(color: Colors.redAccent),
+                  decoration: BoxDecoration(color: Colors.redAccent),
                   height: contrains.maxHeight * 0.09,
                   width: double.infinity,
-                  child: const Text('К игре'),
+                  child: Text('Начать заново'),
                 ),
               )
             ],
