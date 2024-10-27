@@ -28,7 +28,9 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     } else {
       log('WRONG ANSWER');
       final int decreasedTryCounts = state.tryCounts - 1;
-      emit(state.copyWith(tryCounts: decreasedTryCounts));
+      emit(state.copyWith(tryCounts: decreasedTryCounts, isWrongAttempt: true));
+      await Future.delayed(Duration(milliseconds: 500));
+      emit(state.copyWith(isWrongAttempt: false));
     }
   }
 }

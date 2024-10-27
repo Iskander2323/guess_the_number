@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:solva_test_app/components/ui/game_page/game_page.dart';
 import 'package:solva_test_app/components/ui/home_page.dart';
-import 'package:solva_test_app/components/ui/parameters_page/parameters_page_body.dart';
+import 'package:solva_test_app/components/ui/parameters_page/parameters_page.dart';
 import 'package:solva_test_app/components/ui/result_page/result_page.dart';
 
 final GoRouter routes = GoRouter(initialLocation: '/home', routes: <RouteBase>[

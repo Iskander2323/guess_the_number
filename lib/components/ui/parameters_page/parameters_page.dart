@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,20 +14,27 @@ class ParametersPageBody extends StatefulWidget {
 
 class _ParametersPageBodyState extends State<ParametersPageBody> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController maxNumberTextController = TextEditingController();
-  TextEditingController tryCountsTextController = TextEditingController();
+  final TextEditingController maxNumberTextController = TextEditingController();
+  final TextEditingController tryCountsTextController = TextEditingController();
 
-  Widget _textField(
-      TextEditingController textEditingController, String hintText) {
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hintText,
+    double fontSize = 30,
+  }) {
     return TextFormField(
+      textAlign: TextAlign.center,
       decoration: InputDecoration(
         hintText: hintText,
+        hintStyle: const TextStyle(fontFamily: 'BadComic'),
       ),
-      controller: textEditingController,
+      style: TextStyle(
+        fontSize: fontSize,
+        fontFamily: 'BadComic',
+      ),
+      controller: controller,
       keyboardType: TextInputType.number,
-      inputFormatters: <TextInputFormatter>[
-        FilteringTextInputFormatter.digitsOnly,
-      ],
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Введите число';
@@ -44,20 +50,31 @@ class _ParametersPageBodyState extends State<ParametersPageBody> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).textTheme;
+    final titleStyle = theme.titleLarge!.copyWith(
+      fontSize: 40,
+      fontFamily: 'BadComic',
+    );
+    final bodyStyle = theme.bodyLarge!.copyWith(
+      fontSize: 20,
+      fontFamily: 'BadComic',
+    );
+
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
           return BlocBuilder<GameBloc, GameState>(
             builder: (context, state) {
               return Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 100),
                 height: constraints.maxHeight,
                 width: constraints.maxWidth,
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Color.fromRGBO(59, 217, 6, 1),
-                      Color.fromRGBO(255, 195, 0, 1)
+                      Color.fromRGBO(246, 238, 10, 1),
+                      Color.fromRGBO(200, 114, 8, 1)
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -66,39 +83,54 @@ class _ParametersPageBodyState extends State<ParametersPageBody> {
                 child: Form(
                   key: _formKey,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
+                      Text('Задайте условия', style: titleStyle),
                       Text(
-                        'Задайте условия',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge!
-                            .copyWith(fontSize: 40),
+                        'Числа начинаются от 1',
+                        textAlign: TextAlign.center,
+                        style: bodyStyle,
                       ),
-                      _textField(maxNumberTextController, 'Максимальное число'),
-                      _textField(tryCountsTextController, 'Количество попыток'),
+                      _buildTextField(
+                        controller: maxNumberTextController,
+                        hintText: 'Максимальное число',
+                      ),
+                      _buildTextField(
+                        controller: tryCountsTextController,
+                        hintText: 'Количество попыток',
+                      ),
                       GestureDetector(
                         onTap: () {
                           if (_formKey.currentState!.validate()) {
-                            final int maxNumber =
+                            final maxNumber =
                                 int.parse(maxNumberTextController.text);
-                            final int randNumber =
-                                1 + Random().nextInt(maxNumber);
-                            final int tryCounts =
+                            final randNumber = 1 + Random().nextInt(maxNumber);
+                            final tryCounts =
                                 int.parse(tryCountsTextController.text);
                             context.read<GameBloc>().add(SetParametersEvent(
-                                maxNumber: maxNumber,
-                                tryCounts: tryCounts,
-                                randNumber: randNumber));
+                                  maxNumber: maxNumber,
+                                  tryCounts: tryCounts,
+                                  randNumber: randNumber,
+                                ));
                             context.goNamed('gamePage');
                           }
                         },
                         child: Container(
                           alignment: Alignment.center,
-                          decoration: BoxDecoration(color: Colors.redAccent),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
                           height: constraints.maxHeight * 0.09,
                           width: double.infinity,
-                          child: Text('Начать игру'),
+                          child: const Text(
+                            'Начать игру',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'BadComic',
+                            ),
+                          ),
                         ),
                       ),
                     ],
