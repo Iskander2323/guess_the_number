@@ -25,7 +25,6 @@ class _GamePageState extends State<GamePage> {
     final subtitleStyle = theme.titleLarge!
         .copyWith(fontSize: 20, fontFamily: 'BadComic', color: Colors.black);
 
-    // Анимированный виджет с кругом и вопросительным знаком
     Widget _animatedCircleAvatar(GameState state) {
       return CircleAvatar(
         backgroundColor: Colors.orangeAccent,
@@ -38,9 +37,7 @@ class _GamePageState extends State<GamePage> {
             offset: const Offset(10, 10),
           );
     }
-
-    // Поле ввода с параметрами
-    Widget _buildGuessInput() {
+    Widget _guessInput() {
       return TextFormField(
         textAlign: TextAlign.center,
         decoration: const InputDecoration(hintText: 'Введите число'),
@@ -61,9 +58,6 @@ class _GamePageState extends State<GamePage> {
       );
     }
 
-    // Кнопка для подтверждения
-
-    // Сообщение с ошибкой
     void _showSnackBar(BuildContext context, String message) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -74,7 +68,7 @@ class _GamePageState extends State<GamePage> {
       );
     }
 
-    Widget _buildGuessButton(
+    Widget _guessButton(
         BuildContext context, GameState state, BoxConstraints constraints) {
       return GestureDetector(
         onTap: () {
@@ -145,8 +139,8 @@ class _GamePageState extends State<GamePage> {
                       _animatedCircleAvatar(state),
                       Text('Осталось попыток: ${state.tryCounts}',
                           style: subtitleStyle),
-                      _buildGuessInput(),
-                      _buildGuessButton(context, state, constraints),
+                      _guessInput(),
+                      _guessButton(context, state, constraints),
                       TextButton(
                         onPressed: () => context.goNamed('parametersPage'),
                         child: Text('Изменить параметры',
